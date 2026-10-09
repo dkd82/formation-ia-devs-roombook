@@ -1,4 +1,4 @@
-import { fetchRooms, fetchBookings, createBooking } from "./api.js";
+import { fetchRooms, fetchBookings, createBooking, deleteBooking } from "./api.js";
 
 const roomSelect = document.getElementById("room");
 const list = document.getElementById("bookings");
@@ -23,11 +23,19 @@ async function renderBookings() {
       return `<li>
         <strong>${b.title}</strong><br />
         ${room ? room.name : "Salle ?"} · ${formatDate(b.start)} → ${formatDate(b.end)}<br />
-        <small>Organisé par ${b.organizer}</small>
+        <small>Organisé par ${b.organizer}</small><br />
+        <button type="button" data-cancel="${b.id}">Annuler</button>
       </li>`;
     })
     .join("");
 }
+
+list.addEventListener("click", async (event) => {
+  const id = event.target.dataset.cancel;
+  if (!id || !confirm("Annuler cette réservation ?")) return;
+  await deleteBooking(id);
+  await renderBookings();
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -52,3 +52,29 @@ test("POST /bookings refuse un chevauchement franc", async () => {
   });
   assert.equal(res.status, 409);
 });
+
+test("POST /bookings accepte deux réservations dos à dos", async () => {
+  const res = await post({
+    roomId: 1,
+    title: "Suite",
+    organizer: "Bob",
+    start: "2026-10-12T09:15:00.000Z",
+    end: "2026-10-12T10:00:00.000Z",
+  });
+  assert.equal(res.status, 201);
+});
+
+test("DELETE /bookings/:id annule une réservation", async () => {
+  const res = await fetch(`${base}/bookings/1`, { method: "DELETE" });
+  assert.equal(res.status, 204);
+  const list = await (await fetch(`${base}/bookings`)).json();
+  assert.equal(
+    list.some((b) => b.id === 1),
+    false,
+  );
+});
+
+test("DELETE /bookings/:id renvoie 404 si inconnue", async () => {
+  const res = await fetch(`${base}/bookings/999`, { method: "DELETE" });
+  assert.equal(res.status, 404);
+});

@@ -46,7 +46,7 @@ bookingsRouter.post("/", (req, res) => {
     if (b.roomId !== Number(roomId)) continue;
     const bStart = new Date(b.start).getTime();
     const bEnd = new Date(b.end).getTime();
-    if (newStart <= bEnd && bStart <= newEnd) {
+    if (newStart < bEnd && bStart < newEnd) {
       return res.status(409).json({ error: "Créneau déjà réservé", conflictWith: b.id });
     }
   }
@@ -61,4 +61,12 @@ bookingsRouter.post("/", (req, res) => {
   };
   store.bookings.push(booking);
   res.status(201).json(booking);
+});
+
+// Annulation d'une réservation
+bookingsRouter.delete("/:id", (req, res) => {
+  const index = store.bookings.findIndex((b) => b.id === Number(req.params.id));
+  if (index === -1) return res.status(404).json({ error: "Réservation introuvable" });
+  store.bookings.splice(index, 1);
+  res.status(204).end();
 });

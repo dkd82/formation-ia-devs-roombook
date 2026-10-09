@@ -19,3 +19,8 @@ export async function createBooking(booking) {
   const data = await res.json();
   return { ok: res.ok, data };
 }
+
+export async function deleteBooking(id) {
+  const res = await fetch(`${API_URL}/bookings/${id}`, { method: "DELETE" });
+  return res.ok;
+}
