@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TP Jour 1 · RoomBook : de la découverte à la fonctionnalité livrée – Version participants</title><style>
+:root{--bg:#f8fafc;--panel:#ffffff;--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--brand:#0f766e;--brand-ink:#ffffff;--code-bg:#0b1220;--code-ink:#e2e8f0;--soft:#f1f5f9;
+--c-contexte:#1d4ed8;--c-tache:#0f766e;--c-contraintes:#b45309;--c-criteres:#6d28d9;
+--b-contexte:#dbeafe;--b-tache:#ccfbf1;--b-contraintes:#fef3c7;--b-criteres:#ede9fe;--warn-bg:#fef2f2;--warn-ink:#991b1b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--panel:#111a2e;--ink:#e2e8f0;--muted:#94a3b8;--line:#24324f;--brand:#2dd4bf;--brand-ink:#04211e;--code-bg:#050a14;--soft:#16213a;
+--c-contexte:#93c5fd;--c-tache:#5eead4;--c-contraintes:#fcd34d;--c-criteres:#c4b5fd;--b-contexte:#1e3a8a;--b-tache:#134e4a;--b-contraintes:#78350f;--b-criteres:#4c1d95;--warn-bg:#3b1212;--warn-ink:#fecaca}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+code{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:var(--soft);padding:.1em .35em;border-radius:4px}
+pre{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(--code-bg);color:var(--code-ink);padding:1rem;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin:.5rem 0}
+.top{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);padding:.6rem 1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.top h1{font-size:1.05rem;margin:0;flex:1 1 280px}
+.badge{display:inline-block;padding:.15rem .6rem;border-radius:999px;font-size:.78rem;font-weight:700;background:var(--brand);color:var(--brand-ink)}
+.badge.trainer{background:#f59e0b;color:#1f1300}
+.progress{flex:0 1 220px;min-width:140px}
+.progress small{color:var(--muted)}
+.bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--brand);transition:width .3s}
+button,.btn{font:inherit;font-size:.85rem;padding:.4rem .75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--brand)}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+main{max-width:980px;margin:0 auto;padding:1rem 1rem 4rem}
+.banner{background:#fef3c7;color:#78350f;border:1px solid #f59e0b;border-radius:8px;padding:.75rem 1rem;margin:1rem 0;font-weight:600}
+h2{font-size:1.35rem;margin:.2rem 0}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;margin:1rem 0}
+details.card>summary{cursor:pointer;font-weight:700;font-size:1.05rem}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.6rem 0}
+.legend div{padding:.5rem .7rem;border-radius:8px;font-size:.88rem}
+.chip{display:inline-block;font-weight:700;font-size:.8rem;padding:.12rem .55rem;border-radius:999px;margin-right:.4rem}
+.k-contexte{background:var(--b-contexte);color:var(--c-contexte)}
+.k-tache{background:var(--b-tache);color:var(--c-tache)}
+.k-contraintes{background:var(--b-contraintes);color:var(--c-contraintes)}
+.k-criteres{background:var(--b-criteres);color:var(--c-criteres)}
+.ticket{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.4rem;margin:1.6rem 0;scroll-margin-top:90px}
+.ticket>header{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
+.tid{font-weight:800;color:var(--brand);font-size:1.05rem}
+.ticket h2{flex:1 1 300px}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;font-size:.82rem;color:var(--muted)}
+.meta span{background:var(--soft);padding:.15rem .55rem;border-radius:999px}
+.done{font-weight:600;font-size:.9rem}
+.story{background:var(--soft);border-radius:10px;padding:.7rem 1rem}
+.checks{list-style:none;padding:0;margin:.2rem 0}
+.checks li{margin:.25rem 0}
+.checks label{display:flex;gap:.55rem;align-items:flex-start}
+.prompt{border:1px dashed var(--line);border-radius:12px;padding:.4rem 1rem 1rem;margin:1rem 0}
+.block{margin:.8rem 0}
+.block>label,.block>.lbl{display:block;font-weight:600;font-size:.92rem;margin-bottom:.25rem}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.85rem;margin-top:.15rem}
+textarea{width:100%;font:inherit;font-size:.93rem;line-height:1.45;padding:.6rem .75rem;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical;min-height:4.4em}
+textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+.sol{white-space:pre-wrap;background:var(--soft);border-radius:8px;padding:.6rem .8rem;font-size:.93rem;border-left:4px solid var(--brand)}
+.k-b-contexte .sol{border-color:var(--c-contexte)}.k-b-tache .sol{border-color:var(--c-tache)}.k-b-contraintes .sol{border-color:var(--c-contraintes)}.k-b-criteres .sol{border-color:var(--c-criteres)}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
+.fill{font-size:.82rem;color:var(--muted)}
+.why{background:var(--soft);border-radius:8px;padding:.5rem .8rem;font-size:.9rem;margin-top:.6rem}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem}
+.tools>div{background:var(--soft);border-radius:10px;padding:.6rem 1rem}
+.tools h4{margin:.1rem 0 .3rem;font-size:.95rem}
+.tools ul,.ticket ul.plain{margin:.2rem 0 .2rem 1.1rem;padding:0}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+td textarea{min-height:2.6em}
+.trainer-box{border:2px solid #f59e0b;border-radius:12px;padding:.2rem 1rem .8rem;margin-top:1.2rem;background:color-mix(in srgb,#f59e0b 7%,var(--panel))}
+.trainer-box h3:first-child{margin-top:.7rem}
+.pitfalls li::marker{color:#f59e0b}
+dl.guide{margin:.4rem 0 .8rem;font-size:.9rem}
+dl.guide dt{margin-top:.55rem;font-weight:600}
+dl.guide dd{margin:.1rem 0 0 0;color:var(--muted)}
+.guide-intro{margin:.3rem 0;color:var(--muted);font-size:.92rem}
+textarea.promptbox{min-height:20em;font-family:ui-monospace,Consolas,monospace;font-size:.9rem}
+.mode{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:.5rem .9rem;margin:.6rem 0}
+.mode .modes{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin:.2rem 0}
+.mode p{margin:.2rem 0 0;color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
+.toc{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.toc a{text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);padding:.25rem .65rem;border-radius:999px;font-size:.88rem}
+.toc a:hover{border-color:var(--brand)}
+@media (max-width:760px){.top{position:static}}
+@media print{.top .actions,button,.toc{display:none!important}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
+</style></head>
+<body data-key="tp-ia-devs-jour1-participant-v1">
+<div class="top"><h1>TP Jour 1 · RoomBook : de la découverte à la fonctionnalité livrée <span class="badge">Participants</span></h1>
+<div class="progress"><small id="plabel"></small><div class="bar"><i id="bar"></i></div></div>
+<div class="actions"><button id="export">Exporter mes prompts (.md)</button> <button onclick="window.print()">Imprimer</button> <button id="reset">Réinitialiser</button></div>
+</div>
+<main>
+
+<div class="card"><p>Vous rejoignez l'équipe de RoomBook, une application de réservation de salles de réunion (backend Node/Express + frontend JavaScript). Pendant ce TP, vous allez la faire évoluer ticket après ticket : explorer, ajouter une fonctionnalité, corriger un bug, renforcer les tests, refactorer, puis comparer vos deux outils.</p><p><strong>Durée totale :</strong> ≈ 2 h 30 · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p><div class="toc"><a href="#J1-1">J1-1</a><a href="#J1-2">J1-2</a><a href="#J1-3">J1-3</a><a href="#J1-4">J1-4</a><a href="#J1-5">J1-5</a><a href="#J1-6">J1-6</a></div></div>
+
+
+
+<details class="card" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec l'extension GitHub Copilot (Chat) connectée</li><li>Claude Code installé en ligne de commande (commande <code>claude</code> disponible dans le terminal)</li><li>Le dépôt Git de la formation fourni par le formateur (votre fork ou votre copie du dépôt)</li></ul><h3>Étapes</h3><ol><li>Clonez votre dépôt (<code>git clone &lt;url&gt;</code>), ouvrez-le dans VS Code et restez sur la branche <code>main</code>, qui contient le point de départ du jour 1.</li><li>Installez les dépendances : <code>npm install</code> puis <code>npm --prefix backend install</code>.</li><li>Vérifiez que les tests passent : <code>npm test</code> (3 tests verts attendus).</li><li>Lancez l'API (<code>npm run back</code>) et, dans un 2e terminal, le frontend (<code>npm run front</code>), puis ouvrez http://localhost:5173.</li><li>Vérifiez l'état du dépôt : <code>git status</code> (aucune modification) et <code>git log --oneline</code>.</li><li>Pour chaque ticket, travaillez sur une branche : <code>git switch -c ticket-1</code>, <code>git switch -c ticket-2</code>…</li></ol></details>
+
+<details class="card" open><summary>L'anatomie d'un bon prompt</summary>
+<div class="legend"><div class="k-contexte"><strong>Contexte</strong><br>Où en est-on ? Techno, fichiers, situation.</div><div class="k-tache"><strong>Tâche</strong><br>Quel objectif précis et unique ?</div><div class="k-contraintes"><strong>Contraintes</strong><br>Style, limites, ce qu'il ne faut pas toucher.</div><div class="k-criteres"><strong>Critères de succès</strong><br>Comment saura-t-on que c'est réussi ?</div></div>
+<h3>Règles de travail</h3><ul class="plain"><li>Écrivez votre prompt vous-même dans les 4 blocs avant de lancer l'outil : contexte, tâche, contraintes, critères de succès.</li><li>Relisez chaque diff (<code>git diff</code>) avant d'accepter. Vous restez responsable du code.</li><li>Si l'outil tourne en rond après 3 essais : nouvelle session, meilleur contexte.</li><li>Un ticket = une branche = un ou plusieurs commits lisibles.</li></ul></details>
+
+<details class="card"><summary>Aide-mémoire des outils</summary><div class="tools">
+<div><h4>GitHub Copilot (VS Code)</h4><ul>
+<li>Modes de Chat : <code>Ask</code> (questions), <code>Edit</code> (modifications ciblées), <code>Agent</code> (tâches multi-fichiers avec exécution)</li>
+<li>Contexte : <code>#file:chemin</code>, <code>#codebase</code>, <code>#selection</code></li>
+<li>Commandes : <code>/explain</code>, <code>/fix</code>, <code>/tests</code></li>
+<li>Personnalisation : <code>.github/copilot-instructions.md</code>, <code>.github/prompts/*.prompt.md</code>, <code>.github/agents/*.agent.md</code></li></ul></div>
+<div><h4>Claude Code (CLI)</h4><ul>
+<li>Démarrer : <code>claude</code> à la racine du projet ; citer un fichier : <code>@chemin</code></li>
+<li>Mode plan : <code>Shift+Tab</code> ; contexte : <code>/clear</code>, <code>/compact</code>, <code>/cost</code>, <code>/context</code></li>
+<li>Configuration : <code>/init</code>, <code>/memory</code>, <code>/agents</code>, <code>/hooks</code>, <code>/help</code></li>
+<li>Personnalisation : <code>CLAUDE.md</code>, <code>.claude/commands/</code>, <code>.claude/agents/</code>, <code>.claude/settings.json</code></li></ul></div></div>
+<p><small>Les interfaces évoluent vite : en cas de doute, vérifiez dans la documentation de la version installée.</small></p></details>
+
+<article class="ticket" id="J1-1" data-title="J1-1 · Explorer une codebase inconnue">
+<header><span class="tid">J1-1</span><h2>Explorer une codebase inconnue</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-1.done"> Terminé</label>
+<div class="meta"><span>Durée : 15 min</span><span>Outil : Au choix</span><span>Niveau : Facile</span></div></header>
+<h3>Le ticket</h3><div class="story">Vous découvrez RoomBook. Avant de toucher au code, l'équipe attend de vous une compréhension solide du projet : comment il est organisé et ce qui se passe quand un utilisateur réserve une salle.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-1.acc0"><span>Une carte de l'architecture (dossiers et rôle de chaque fichier)</span></label></li><li><label><input type="checkbox" data-save="J1-1.acc1"><span>Le parcours complet d'une réservation, du clic au stockage, avec fichier et fonction à chaque étape</span></label></li><li><label><input type="checkbox" data-save="J1-1.acc2"><span>La liste des règles de validation métier</span></label></li><li><label><input type="checkbox" data-save="J1-1.acc3"><span>Aucun fichier modifié (<code>git status</code> propre)</span></label></li></ul><section class="prompt" data-label="Prompt d'exploration"><h3>Prompt d'exploration</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Qu'est-ce que le projet ? Quelles technos ? Qu'est-ce que vous savez / ne savez pas ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quelle question précise ? Un résumé ET un parcours de bout en bout.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Lecture seule ? Comment éviter qu'il invente ? Quel niveau de précision ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quelle structure de réponse voulez-vous ? Que doit-on pouvoir faire après l'avoir lue ?</dd></dl>
+<textarea class="promptbox" id="J1-1.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-1.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Ouvrez Copilot Chat en mode <code>Ask</code> (lecture seule par nature).</li><li>Ajoutez du contexte avec <code>#codebase</code> ou en glissant les fichiers (<code>#file:backend/src/routes/bookings.js</code>).</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Lancez <code>claude</code> à la racine du projet. Les fichiers se citent avec <code>@backend/src/routes/bookings.js</code>.</li><li>Activez le mode plan (<code>Shift+Tab</code>) pour garantir qu'aucune modification ne sera faite.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Ouvrez 2 fichiers cités par l'IA : la description est-elle exacte ?</li><li><code>git status</code> : aucun changement.</li></ul><h3>Mes observations</h3><textarea data-save="J1-1.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J1-2" data-title="J1-2 · Annuler une réservation (backend + frontend)">
+<header><span class="tid">J1-2</span><h2>Annuler une réservation (backend + frontend)</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-2.done"> Terminé</label>
+<div class="meta"><span>Durée : 30 min</span><span>Outil : Claude Code (agent)</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Les utilisateurs ne peuvent pas annuler leurs réservations. Ajoutez l'annulation d'une réservation : un endpoint côté API et un bouton « Annuler » côté interface.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-2.acc0"><span><code>DELETE /bookings/:id</code> renvoie 204 si la réservation existe, 404 avec un corps JSON contenant <code>error</code> sinon</span></label></li><li><label><input type="checkbox" data-save="J1-2.acc1"><span>Chaque réservation affiche un bouton « Annuler » avec confirmation avant suppression</span></label></li><li><label><input type="checkbox" data-save="J1-2.acc2"><span>La liste se rafraîchit après annulation</span></label></li><li><label><input type="checkbox" data-save="J1-2.acc3"><span>2 tests backend ajoutés (succès et 404), <code>npm test</code> vert</span></label></li><li><label><input type="checkbox" data-save="J1-2.acc4"><span>Le diff ne touche ni la création ni la logique de conflit</span></label></li></ul><section class="prompt" data-label="Prompt 1 · Demander un plan"><h3>Prompt 1 · Demander un plan</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quels fichiers sont concernés (back et front) ? Où sont les tests ? Quel style de code ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quel objectif unique ? Pensez à demander un plan AVANT le code.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Style, dépendances, ce qu'il ne faut PAS toucher, granularité des commits.</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Codes HTTP attendus ? Tests ? Comment saurez-vous que c'est fini ?</dd></dl>
+<textarea class="promptbox" id="J1-2.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-2.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Prompt 2 · Valider le plan et avancer par incréments"><h3>Prompt 2 · Valider le plan et avancer par incréments</h3>
+<p class="guide-intro">Vous avez relu le plan. Que validez-vous, que corrigez-vous ? Limitez l'étape suivante à un incrément.</p>
+<textarea class="promptbox" id="J1-2.p1" data-prompt data-save="J1-2.p1" placeholder="Écrivez votre prompt ici…"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Utilisez le mode <code>Agent</code> de Copilot Chat pour une tâche multi-fichiers, ou <code>Edit</code> en listant les fichiers avec <code>#file</code>.</li><li>Acceptez les modifications fichier par fichier après lecture du diff.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Démarrez en mode plan (<code>Shift+Tab</code>), validez, puis passez en exécution.</li><li>Demandez-lui de lancer <code>npm test</code> lui-même : il lit les échecs et corrige.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li><code>npm test</code> : tous les tests verts, dont les 2 nouveaux.</li><li>Dans le navigateur : créez une réservation, annulez-la (avec confirmation).</li><li><code>git diff --stat</code> : seuls bookings.js, api.js, main.js et le fichier de tests sont touchés.</li></ul><h3>Mes observations</h3><textarea data-save="J1-2.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J1-3" data-title="J1-3 · Bug : impossible de réserver juste après une autre réservation">
+<header><span class="tid">J1-3</span><h2>Bug : impossible de réserver juste après une autre réservation</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-3.done"> Terminé</label>
+<div class="meta"><span>Durée : 25 min</span><span>Outil : Copilot ou Claude Code</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Rapport d'Alice : « La salle Mont Blanc est occupée de 09:00 à 09:15 par la daily. Quand Bob essaie de réserver Mont Blanc de 09:15 à 10:00, l'application répond « Créneau déjà réservé ». Pourtant la salle est libre à 09:15 ! » Corrigez la cause du problème.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-3.acc0"><span>Un test automatisé reproduit le bug et échoue AVANT la correction</span></label></li><li><label><input type="checkbox" data-save="J1-3.acc1"><span>Après correction, ce test passe et les 3 tests existants restent verts</span></label></li><li><label><input type="checkbox" data-save="J1-3.acc2"><span>Un vrai chevauchement (09:05–09:30) renvoie toujours 409</span></label></li><li><label><input type="checkbox" data-save="J1-3.acc3"><span>Le cas symétrique (une réservation qui se termine pile quand une autre commence) est couvert</span></label></li><li><label><input type="checkbox" data-save="J1-3.acc4"><span>Correction minimale, sans contournement</span></label></li></ul><section class="prompt" data-label="Prompt de débogage"><h3>Prompt de débogage</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Comportement observé, comportement attendu, fichier concerné, données de l'exemple.</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Reproduire d'abord (test rouge) ? Demander des hypothèses classées avant de corriger ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Périmètre de la correction ? Quels contournements interdisez-vous ? L'API doit-elle changer ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quels tests doivent être rouges puis verts ? Quels comportements doivent rester identiques ?</dd></dl>
+<textarea class="promptbox" id="J1-3.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-3.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Sélectionnez la boucle de détection dans l'éditeur, puis utilisez Chat avec <code>#selection</code> pour cibler le contexte.</li><li>Pour les tests, vous pouvez aussi utiliser la commande <code>/tests</code>, mais gardez votre prompt structuré.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Faites écrire le test, lancez <code>npm test</code> vous-même pour constater le rouge, puis demandez la correction.</li><li>Si la session s'embrouille : <code>/clear</code> puis relancez avec un contexte plus précis.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Constatez le test rouge avant correction (capture ou sortie du terminal).</li><li><code>npm test</code> : tout vert après correction.</li><li>Essayez dans l'UI : 09:15–10:00 passe, 09:05–09:30 est refusé.</li></ul><h3>Mes observations</h3><textarea data-save="J1-3.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J1-4" data-title="J1-4 · Renforcer les tests de création de réservation">
+<header><span class="tid">J1-4</span><h2>Renforcer les tests de création de réservation</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-4.done"> Terminé</label>
+<div class="meta"><span>Durée : 25 min</span><span>Outil : Copilot ou Claude Code</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">La route de création n'est couverte que par 3 tests. Avant de refactorer (ticket suivant), l'équipe veut un filet de sécurité solide.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-4.acc0"><span>Un tableau de cas à couvrir validé AVANT l'écriture des tests</span></label></li><li><label><input type="checkbox" data-save="J1-4.acc1"><span>Au moins 8 nouveaux tests, tous verts</span></label></li><li><label><input type="checkbox" data-save="J1-4.acc2"><span>Cas couverts : champ manquant, fin avant début, salle inconnue, chevauchements (début, fin, inclusion), même créneau dans une autre salle</span></label></li><li><label><input type="checkbox" data-save="J1-4.acc3"><span>Preuve de pertinence : en cassant volontairement le code, au moins un test devient rouge</span></label></li><li><label><input type="checkbox" data-save="J1-4.acc4"><span>Code de production inchangé</span></label></li></ul><section class="prompt" data-label="Prompt 1 · Lister les cas à couvrir"><h3>Prompt 1 · Lister les cas à couvrir</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quelle route, quels fichiers, quels tests existent déjà ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Demandez la liste des cas avant le code.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Style des tests, ce qu'on ne touche pas, dépendances.</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quel format de tableau ? Quelles familles de cas ?</dd></dl>
+<textarea class="promptbox" id="J1-4.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-4.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Prompt 2 · Écrire les tests et prouver leur utilité"><h3>Prompt 2 · Écrire les tests et prouver leur utilité</h3>
+<p class="guide-intro">Validez ou ajustez le tableau, demandez l'écriture, puis la preuve que les tests détectent une régression.</p>
+<textarea class="promptbox" id="J1-4.p1" data-prompt data-save="J1-4.p1" placeholder="Écrivez votre prompt ici…"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Mode <code>Agent</code> pour qu'il lance les tests, ou <code>Edit</code> limité au fichier de tests (<code>#file:backend/test/bookings.test.js</code>).</li><li>Annulez la casse volontaire avec <code>git restore backend/src/routes/bookings.js</code>.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Demandez explicitement d'exécuter <code>npm test</code> après l'écriture.</li><li>Pour la casse volontaire, vérifiez ensuite avec <code>git diff</code> que le code de production est bien revenu à l'état initial.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li><code>npm test</code> : 11 tests au minimum, tous verts.</li><li><code>git diff backend/src</code> : vide à la fin (code de production inchangé).</li><li>Preuve de la casse volontaire : au moins un test rouge observé.</li></ul><h3>Mes observations</h3><textarea data-save="J1-4.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J1-5" data-title="J1-5 · Refactorer la route de création">
+<header><span class="tid">J1-5</span><h2>Refactorer la route de création</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-5.done"> Terminé</label>
+<div class="meta"><span>Durée : 20 min</span><span>Outil : Copilot ou Claude Code</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Le handler POST de <code>bookings.js</code> fait environ 60 lignes et mélange validation, détection de conflit et création. Il faut le découper pour pouvoir réutiliser la logique, sans changer le comportement.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-5.acc0"><span><code>validateBooking(body)</code> extraite dans <code>backend/src/services/validation.js</code></span></label></li><li><label><input type="checkbox" data-save="J1-5.acc1"><span><code>findConflict(bookings, { roomId, start, end })</code> extraite dans <code>backend/src/services/conflicts.js</code>, sans accès direct au store</span></label></li><li><label><input type="checkbox" data-save="J1-5.acc2"><span>Le handler POST fait moins de 25 lignes</span></label></li><li><label><input type="checkbox" data-save="J1-5.acc3"><span><code>npm test</code> vert après chaque extraction, comportement strictement identique</span></label></li><li><label><input type="checkbox" data-save="J1-5.acc4"><span>Deux commits, un par extraction</span></label></li></ul><section class="prompt" data-label="Prompt de refactoring"><h3>Prompt de refactoring</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quel code pose problème ? Quel est le filet de sécurité ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quelles extractions, vers quels fichiers, dans quel ordre ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Le comportement doit-il changer ? Que lui interdisez-vous d'« améliorer » ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quels signaux objectifs prouvent que le refactoring est réussi ?</dd></dl>
+<textarea class="promptbox" id="J1-5.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-5.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Mode <code>Agent</code> ou <code>Edit</code> avec les fichiers cités. Relisez chaque diff : Copilot a tendance à reformuler au passage.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Demandez un commit par extraction. Vérifiez <code>git log --oneline</code> puis <code>git show</code> sur chaque commit.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li><code>npm test</code> vert.</li><li><code>git log --oneline</code> : deux commits distincts.</li><li>Relisez <code>git diff HEAD~2</code> : aucun changement hors périmètre.</li></ul><h3>Mes observations</h3><textarea data-save="J1-5.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J1-6" data-title="J1-6 · Comparer IDE assisté et agent autonome">
+<header><span class="tid">J1-6</span><h2>Comparer IDE assisté et agent autonome</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J1-6.done"> Terminé</label>
+<div class="meta"><span>Durée : 25 min</span><span>Outil : Copilot ET Claude Code</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Ajoutez un filtre « Toutes les salles » au-dessus de la liste des réservations. Réalisez le ticket deux fois, sur deux branches, avec le même prompt : une fois avec GitHub Copilot (IDE assisté), une fois avec Claude Code (agent), puis comparez objectivement.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J1-6.acc0"><span>Branche <code>ticket-6-copilot</code> et branche <code>ticket-6-claude</code>, partant du même commit</span></label></li><li><label><input type="checkbox" data-save="J1-6.acc1"><span>Le même prompt utilisé dans les deux outils</span></label></li><li><label><input type="checkbox" data-save="J1-6.acc2"><span>Le filtre fonctionne dans le navigateur (par salle et « Toutes les salles »)</span></label></li><li><label><input type="checkbox" data-save="J1-6.acc3"><span>La grille de comparaison est remplie pour chaque outil</span></label></li></ul><section class="prompt" data-label="Prompt commun (à utiliser tel quel dans les deux outils)"><h3>Prompt commun (à utiliser tel quel dans les deux outils)</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quels fichiers front ? L'API sait-elle déjà filtrer ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Un seul objectif, formulé côté utilisateur.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Techno, dépendances, périmètre.</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Comment vérifier dans le navigateur ?</dd></dl>
+<textarea class="promptbox" id="J1-6.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-6.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Utilisez Copilot Chat en mode <code>Edit</code> ou <code>Agent</code> dans VS Code, avec les 3 fichiers en contexte.</li><li>Notez le nombre d'allers-retours et les clics d'acceptation.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Lancez <code>claude</code> sur la 2e branche, donnez le même prompt, laissez-le agir.</li><li>Notez le temps, les fichiers touchés (<code>git diff --stat</code>) et les questions posées.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Les deux branches fonctionnent dans le navigateur.</li><li><code>git diff --stat ticket-6-copilot ticket-6-claude</code> pour comparer les périmètres.</li></ul><h3>Grille de comparaison</h3><table><tr><th>Critère</th><th>GitHub Copilot</th><th>Claude Code</th></tr><tr><td>Temps total</td><td><textarea data-save="J1-6.cmp0c" data-obs="Comparaison : Temps total (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp0k" data-obs="Comparaison : Temps total (Claude Code)"></textarea></td></tr><tr><td>Nombre d'itérations</td><td><textarea data-save="J1-6.cmp1c" data-obs="Comparaison : Nombre d'itérations (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp1k" data-obs="Comparaison : Nombre d'itérations (Claude Code)"></textarea></td></tr><tr><td>Fichiers modifiés</td><td><textarea data-save="J1-6.cmp2c" data-obs="Comparaison : Fichiers modifiés (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp2k" data-obs="Comparaison : Fichiers modifiés (Claude Code)"></textarea></td></tr><tr><td>Lisibilité du diff</td><td><textarea data-save="J1-6.cmp3c" data-obs="Comparaison : Lisibilité du diff (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp3k" data-obs="Comparaison : Lisibilité du diff (Claude Code)"></textarea></td></tr><tr><td>Confiance dans le résultat (1 à 5)</td><td><textarea data-save="J1-6.cmp4c" data-obs="Comparaison : Confiance dans le résultat (1 à 5) (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp4k" data-obs="Comparaison : Confiance dans le résultat (1 à 5) (Claude Code)"></textarea></td></tr><tr><td>Points forts / points faibles</td><td><textarea data-save="J1-6.cmp5c" data-obs="Comparaison : Points forts / points faibles (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp5k" data-obs="Comparaison : Points forts / points faibles (Claude Code)"></textarea></td></tr></table><h3>Mes observations</h3><textarea data-save="J1-6.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<div class="card"><h2>Bilan de la journée</h2><div class="block"><label for="bilan0"><strong>Quel est mon meilleur prompt de la journée, et pourquoi ?</strong></label><textarea id="bilan0" data-save="bilan.0" data-obs="Quel est mon meilleur prompt de la journée, et pourquoi ?"></textarea></div><div class="block"><label for="bilan1"><strong>Quelle erreur de l'IA ai-je dû corriger ?</strong></label><textarea id="bilan1" data-save="bilan.1" data-obs="Quelle erreur de l'IA ai-je dû corriger ?"></textarea></div><div class="block"><label for="bilan2"><strong>Qu'est-ce que je ferai différemment demain ?</strong></label><textarea id="bilan2" data-save="bilan.2" data-obs="Qu'est-ce que je ferai différemment demain ?"></textarea></div></div>
+<footer>Formation IA pour les devs · Human Coders · Version participants</footer>
+</main>
+<script>
+(function(){
+  var KEY = document.body.getAttribute('data-key');
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function grow(t){ if (!t.value) { t.style.height = ''; return; } t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+  var fields = document.querySelectorAll('[data-save]');
+  Array.prototype.forEach.call(fields, function(el){
+    var k = el.getAttribute('data-save');
+    if (k in state) { if (el.type === 'checkbox') el.checked = !!state[k]; else el.value = state[k]; }
+    else if (el.hasAttribute('data-template')) { el.value = el.getAttribute('data-template'); }
+    if (el.tagName === 'TEXTAREA') grow(el);
+    var h = function(){
+      state[k] = el.type === 'checkbox' ? el.checked : el.value;
+      save(); if (el.tagName === 'TEXTAREA') grow(el); update();
+    };
+    el.addEventListener('input', h); el.addEventListener('change', h);
+  });
+  function update(){
+    var tickets = document.querySelectorAll('.ticket'), done = 0;
+    Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); if (c && c.checked) done++; });
+    var pct = tickets.length ? Math.round(100 * done / tickets.length) : 0;
+    var bar = document.getElementById('bar'); if (bar) bar.style.width = pct + '%';
+    var lab = document.getElementById('plabel'); if (lab) lab.textContent = done + ' / ' + tickets.length + ' tickets terminés';
+  }
+  function copy(text, btn){
+    var ok = function(){ var o = btn.textContent; btn.textContent = 'Copié'; setTimeout(function(){ btn.textContent = o; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, function(){ fallback(text); ok(); }); }
+    else { fallback(text); ok(); }
+  }
+  function fallback(text){ var a = document.createElement('textarea'); a.value = text; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(a); }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-copy]'); if (!b) return;
+    var p = b.closest('.prompt'); var src = b.getAttribute('data-copy');
+    if (src === 'box') copy(p.querySelector('textarea[data-prompt]').value, b);
+    else copy(p.querySelector('pre.solution').textContent, b);
+  });
+  var ex = document.getElementById('export');
+  if (ex) ex.addEventListener('click', function(){
+    var out = '# ' + document.title + '\n\n';
+    Array.prototype.forEach.call(document.querySelectorAll('.ticket'), function(t){
+      out += '## ' + t.getAttribute('data-title') + '\n\n';
+      Array.prototype.forEach.call(t.querySelectorAll('.prompt'), function(p){
+        out += '### ' + p.getAttribute('data-label') + '\n\n```text\n' + p.querySelector('textarea[data-prompt]').value.trim() + '\n```\n\n';
+      });
+      Array.prototype.forEach.call(t.querySelectorAll('textarea[data-obs]'), function(o){ if (o.value.trim()) out += '**' + o.getAttribute('data-obs') + '**\n\n' + o.value.trim() + '\n\n'; });
+    });
+    var blob = new Blob([out], {type:'text/markdown'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = KEY + '.md'; a.click();
+  });
+  var rs = document.getElementById('reset');
+  if (rs) rs.addEventListener('click', function(){ if (confirm('Effacer toutes vos saisies de ce TP ?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } });
+  update();
+  window.addEventListener('load', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
+  window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
+})();
+</script>
+</body></html>

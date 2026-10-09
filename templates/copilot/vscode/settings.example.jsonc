@@ -1,0 +1,17 @@
+{
+  // Validation des commandes de terminal par l'agent de Copilot Chat.
+  // Le nom exact du paramètre et sa syntaxe dépendent de la version de VS Code :
+  // recherchez « autoApprove » dans les paramètres pour vérifier.
+  // true = exécutée sans demander, false = demande toujours confirmation.
+  "chat.tools.terminal.autoApprove": {
+    "npm test": true,
+    "npm run lint": true,
+    "git status": true,
+    "git diff": true,
+    "git log": true,
+    "rm": false,
+    "git push": false,
+    "git reset": false,
+    "/\\.env/": false
+  }
+}

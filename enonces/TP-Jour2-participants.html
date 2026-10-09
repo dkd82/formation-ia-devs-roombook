@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TP Jour 2 · RoomBook : industrialiser avec l'IA – Version participants</title><style>
+:root{--bg:#f8fafc;--panel:#ffffff;--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--brand:#0f766e;--brand-ink:#ffffff;--code-bg:#0b1220;--code-ink:#e2e8f0;--soft:#f1f5f9;
+--c-contexte:#1d4ed8;--c-tache:#0f766e;--c-contraintes:#b45309;--c-criteres:#6d28d9;
+--b-contexte:#dbeafe;--b-tache:#ccfbf1;--b-contraintes:#fef3c7;--b-criteres:#ede9fe;--warn-bg:#fef2f2;--warn-ink:#991b1b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--panel:#111a2e;--ink:#e2e8f0;--muted:#94a3b8;--line:#24324f;--brand:#2dd4bf;--brand-ink:#04211e;--code-bg:#050a14;--soft:#16213a;
+--c-contexte:#93c5fd;--c-tache:#5eead4;--c-contraintes:#fcd34d;--c-criteres:#c4b5fd;--b-contexte:#1e3a8a;--b-tache:#134e4a;--b-contraintes:#78350f;--b-criteres:#4c1d95;--warn-bg:#3b1212;--warn-ink:#fecaca}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+code{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:var(--soft);padding:.1em .35em;border-radius:4px}
+pre{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(--code-bg);color:var(--code-ink);padding:1rem;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin:.5rem 0}
+.top{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);padding:.6rem 1rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.top h1{font-size:1.05rem;margin:0;flex:1 1 280px}
+.badge{display:inline-block;padding:.15rem .6rem;border-radius:999px;font-size:.78rem;font-weight:700;background:var(--brand);color:var(--brand-ink)}
+.badge.trainer{background:#f59e0b;color:#1f1300}
+.progress{flex:0 1 220px;min-width:140px}
+.progress small{color:var(--muted)}
+.bar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--brand);transition:width .3s}
+button,.btn{font:inherit;font-size:.85rem;padding:.4rem .75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--brand)}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+main{max-width:980px;margin:0 auto;padding:1rem 1rem 4rem}
+.banner{background:#fef3c7;color:#78350f;border:1px solid #f59e0b;border-radius:8px;padding:.75rem 1rem;margin:1rem 0;font-weight:600}
+h2{font-size:1.35rem;margin:.2rem 0}
+h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;margin:1rem 0}
+details.card>summary{cursor:pointer;font-weight:700;font-size:1.05rem}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:.6rem 0}
+.legend div{padding:.5rem .7rem;border-radius:8px;font-size:.88rem}
+.chip{display:inline-block;font-weight:700;font-size:.8rem;padding:.12rem .55rem;border-radius:999px;margin-right:.4rem}
+.k-contexte{background:var(--b-contexte);color:var(--c-contexte)}
+.k-tache{background:var(--b-tache);color:var(--c-tache)}
+.k-contraintes{background:var(--b-contraintes);color:var(--c-contraintes)}
+.k-criteres{background:var(--b-criteres);color:var(--c-criteres)}
+.ticket{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.4rem;margin:1.6rem 0;scroll-margin-top:90px}
+.ticket>header{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
+.tid{font-weight:800;color:var(--brand);font-size:1.05rem}
+.ticket h2{flex:1 1 300px}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;font-size:.82rem;color:var(--muted)}
+.meta span{background:var(--soft);padding:.15rem .55rem;border-radius:999px}
+.done{font-weight:600;font-size:.9rem}
+.story{background:var(--soft);border-radius:10px;padding:.7rem 1rem}
+.checks{list-style:none;padding:0;margin:.2rem 0}
+.checks li{margin:.25rem 0}
+.checks label{display:flex;gap:.55rem;align-items:flex-start}
+.prompt{border:1px dashed var(--line);border-radius:12px;padding:.4rem 1rem 1rem;margin:1rem 0}
+.block{margin:.8rem 0}
+.block>label,.block>.lbl{display:block;font-weight:600;font-size:.92rem;margin-bottom:.25rem}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.85rem;margin-top:.15rem}
+textarea{width:100%;font:inherit;font-size:.93rem;line-height:1.45;padding:.6rem .75rem;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical;min-height:4.4em}
+textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+.sol{white-space:pre-wrap;background:var(--soft);border-radius:8px;padding:.6rem .8rem;font-size:.93rem;border-left:4px solid var(--brand)}
+.k-b-contexte .sol{border-color:var(--c-contexte)}.k-b-tache .sol{border-color:var(--c-tache)}.k-b-contraintes .sol{border-color:var(--c-contraintes)}.k-b-criteres .sol{border-color:var(--c-criteres)}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
+.fill{font-size:.82rem;color:var(--muted)}
+.why{background:var(--soft);border-radius:8px;padding:.5rem .8rem;font-size:.9rem;margin-top:.6rem}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem}
+.tools>div{background:var(--soft);border-radius:10px;padding:.6rem 1rem}
+.tools h4{margin:.1rem 0 .3rem;font-size:.95rem}
+.tools ul,.ticket ul.plain{margin:.2rem 0 .2rem 1.1rem;padding:0}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+td textarea{min-height:2.6em}
+.trainer-box{border:2px solid #f59e0b;border-radius:12px;padding:.2rem 1rem .8rem;margin-top:1.2rem;background:color-mix(in srgb,#f59e0b 7%,var(--panel))}
+.trainer-box h3:first-child{margin-top:.7rem}
+.pitfalls li::marker{color:#f59e0b}
+dl.guide{margin:.4rem 0 .8rem;font-size:.9rem}
+dl.guide dt{margin-top:.55rem;font-weight:600}
+dl.guide dd{margin:.1rem 0 0 0;color:var(--muted)}
+.guide-intro{margin:.3rem 0;color:var(--muted);font-size:.92rem}
+textarea.promptbox{min-height:20em;font-family:ui-monospace,Consolas,monospace;font-size:.9rem}
+.mode{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:.5rem .9rem;margin:.6rem 0}
+.mode .modes{display:flex;flex-wrap:wrap;gap:.3rem 1.5rem;margin:.2rem 0}
+.mode p{margin:.2rem 0 0;color:var(--muted);font-size:.9rem}
+footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
+.toc{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.toc a{text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);padding:.25rem .65rem;border-radius:999px;font-size:.88rem}
+.toc a:hover{border-color:var(--brand)}
+@media (max-width:760px){.top{position:static}}
+@media print{.top .actions,button,.toc{display:none!important}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
+</style></head>
+<body data-key="tp-ia-devs-jour2-participant-v1">
+<div class="top"><h1>TP Jour 2 · RoomBook : industrialiser avec l'IA <span class="badge">Participants</span></h1>
+<div class="progress"><small id="plabel"></small><div class="bar"><i id="bar"></i></div></div>
+<div class="actions"><button id="export">Exporter mes prompts (.md)</button> <button onclick="window.print()">Imprimer</button> <button id="reset">Réinitialiser</button></div>
+</div>
+<main>
+
+<div class="card"><p>RoomBook grandit. Aujourd'hui, vous passez d'un usage individuel de l'IA à un système d'équipe : un fichier de contexte partagé, des commandes réutilisables, des sous-agents spécialisés, des hooks qui garantissent les règles, une CI et une documentation à jour. Chaque ticket fait évoluer l'application et son outillage.</p><p><strong>Durée totale :</strong> ≈ 3 h · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p><div class="toc"><a href="#J2-1">J2-1</a><a href="#J2-2">J2-2</a><a href="#J2-3">J2-3</a><a href="#J2-4">J2-4</a><a href="#J2-5">J2-5</a><a href="#J2-6">J2-6</a><a href="#J2-7">J2-7</a></div></div>
+
+
+
+<details class="card" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec GitHub Copilot Chat, Claude Code en ligne de commande</li><li>Votre dépôt RoomBook de la veille, ou à défaut la branche <code>jour2-start</code> du dépôt de la formation (bug corrigé, annulation et 6 tests)</li><li>Un dépôt GitHub (pour la CI et la revue de PR) : poussez votre projet dessus</li></ul><h3>Étapes</h3><ol><li>Repartez de votre dépôt, ou récupérez la branche de départ : <code>git fetch origin</code> puis <code>git switch jour2-start</code>.</li><li>Installez : <code>npm install</code> puis <code>npm --prefix backend install</code>. Committez les fichiers <code>package-lock.json</code> générés (la CI utilisera <code>npm ci</code>).</li><li>Vérifiez : <code>npm test</code> (6 tests verts au minimum) et <code>npm run lint</code> (aucun avertissement).</li><li>Créez une branche par ticket : <code>git switch -c j2-ticket-1</code>, etc.</li></ol></details>
+
+<details class="card" open><summary>L'anatomie d'un bon prompt</summary>
+<div class="legend"><div class="k-contexte"><strong>Contexte</strong><br>Où en est-on ? Techno, fichiers, situation.</div><div class="k-tache"><strong>Tâche</strong><br>Quel objectif précis et unique ?</div><div class="k-contraintes"><strong>Contraintes</strong><br>Style, limites, ce qu'il ne faut pas toucher.</div><div class="k-criteres"><strong>Critères de succès</strong><br>Comment saura-t-on que c'est réussi ?</div></div>
+<h3>Règles de travail</h3><ul class="plain"><li>Le prompt reste structuré en 4 blocs : contexte, tâche, contraintes, critères de succès.</li><li>Les fichiers de configuration créés (commandes, agents, hooks) sont du code : relisez-les et committez-les.</li><li>Un hook s'exécute avec vos droits : ne copiez jamais un hook que vous n'avez pas lu.</li><li>Tout ce que l'IA affirme sur une commande ou une option doit être vérifié en l'exécutant.</li></ul></details>
+
+<details class="card"><summary>Aide-mémoire des outils</summary><div class="tools">
+<div><h4>GitHub Copilot (VS Code)</h4><ul>
+<li>Modes de Chat : <code>Ask</code> (questions), <code>Edit</code> (modifications ciblées), <code>Agent</code> (tâches multi-fichiers avec exécution)</li>
+<li>Contexte : <code>#file:chemin</code>, <code>#codebase</code>, <code>#selection</code></li>
+<li>Commandes : <code>/explain</code>, <code>/fix</code>, <code>/tests</code></li>
+<li>Personnalisation : <code>.github/copilot-instructions.md</code>, <code>.github/prompts/*.prompt.md</code>, <code>.github/agents/*.agent.md</code></li></ul></div>
+<div><h4>Claude Code (CLI)</h4><ul>
+<li>Démarrer : <code>claude</code> à la racine du projet ; citer un fichier : <code>@chemin</code></li>
+<li>Mode plan : <code>Shift+Tab</code> ; contexte : <code>/clear</code>, <code>/compact</code>, <code>/cost</code>, <code>/context</code></li>
+<li>Configuration : <code>/init</code>, <code>/memory</code>, <code>/agents</code>, <code>/hooks</code>, <code>/help</code></li>
+<li>Personnalisation : <code>CLAUDE.md</code>, <code>.claude/commands/</code>, <code>.claude/agents/</code>, <code>.claude/settings.json</code></li></ul></div></div>
+<p><small>Les interfaces évoluent vite : en cas de doute, vérifiez dans la documentation de la version installée.</small></p></details>
+
+<article class="ticket" id="J2-1" data-title="J2-1 · Le fichier de contexte partagé">
+<header><span class="tid">J2-1</span><h2>Le fichier de contexte partagé</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-1.done"> Terminé</label>
+<div class="meta"><span>Durée : 20 min</span><span>Outil : Claude Code + Copilot</span><span>Niveau : Facile</span></div></header>
+<h3>Le ticket</h3><div class="story">Chaque développeur redonne les mêmes explications à son assistant. L'équipe veut un fichier de contexte unique, versionné, lu par Claude Code et par GitHub Copilot.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-1.acc0"><span><code>AGENTS.md</code> à la racine : commandes, architecture, conventions, règles de test, « À ne jamais faire » (60 lignes max)</span></label></li><li><label><input type="checkbox" data-save="J2-1.acc1"><span><code>CLAUDE.md</code> qui importe <code>AGENTS.md</code> (ligne <code>@AGENTS.md</code>)</span></label></li><li><label><input type="checkbox" data-save="J2-1.acc2"><span><code>.github/copilot-instructions.md</code> avec le même contenu pour Copilot</span></label></li><li><label><input type="checkbox" data-save="J2-1.acc3"><span>Chaque commande citée a été exécutée et fonctionne</span></label></li></ul><section class="prompt" data-label="Prompt de génération du fichier de contexte"><h3>Prompt de génération du fichier de contexte</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quel projet, quelles technos, quels assistants doivent partager ces règles ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quel fichier créer, avec quelles sections ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Longueur, fiabilité des commandes, ce qu'il ne faut pas y mettre.</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Qu'est-ce qu'un nouvel arrivant (ou un agent) doit pouvoir faire seul ?</dd></dl>
+<textarea class="promptbox" id="J2-1.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-1.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Créez <code>.github/copilot-instructions.md</code> avec le contenu d'AGENTS.md (selon la version de VS Code, <code>AGENTS.md</code> peut aussi être pris en compte : vérifiez les paramètres).</li><li>Contrôle : une réponse de Chat doit mentionner ces règles ; sinon, regardez les « références » listées sous la réponse.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li><code>/init</code> génère un <code>CLAUDE.md</code> initial : comparez-le avec votre prompt.</li><li>Dans <code>CLAUDE.md</code>, écrivez simplement <code>@AGENTS.md</code> pour importer le fichier partagé. Vérifiez avec <code>/memory</code>.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Exécutez chaque commande listée dans AGENTS.md.</li><li>Nouvelle session Claude Code : « Comment lancer les tests ? » doit répondre juste sans explorer.</li><li>Le fichier fait 60 lignes ou moins.</li></ul><h3>Mes observations</h3><textarea data-save="J2-1.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-2" data-title="J2-2 · Salles : capacité, équipements et recherche de salle libre">
+<header><span class="tid">J2-2</span><h2>Salles : capacité, équipements et recherche de salle libre</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-2.done"> Terminé</label>
+<div class="meta"><span>Durée : 35 min</span><span>Outil : Claude Code (agent)</span><span>Niveau : Avancé</span></div></header>
+<h3>Le ticket</h3><div class="story">Les utilisateurs veulent trouver une salle libre pour un créneau et une taille de groupe donnés. Ajoutez la capacité et les équipements aux salles, un endpoint de recherche de salles disponibles, et branchez l'interface.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-2.acc0"><span>Les salles ont <code>capacity</code> (nombre) et <code>equipment</code> (tableau de chaînes)</span></label></li><li><label><input type="checkbox" data-save="J2-2.acc1"><span><code>GET /rooms/available?start=&amp;end=&amp;minCapacity=</code> renvoie les salles libres, 400 si les dates sont invalides</span></label></li><li><label><input type="checkbox" data-save="J2-2.acc2"><span>La logique de conflit existante est réutilisée, pas dupliquée</span></label></li><li><label><input type="checkbox" data-save="J2-2.acc3"><span>Le sélecteur de salle n'affiche que les salles libres quand début et fin sont renseignés, avec la capacité dans le libellé</span></label></li><li><label><input type="checkbox" data-save="J2-2.acc4"><span>Au moins 5 nouveaux tests, <code>npm test</code> vert</span></label></li></ul><section class="prompt" data-label="Prompt 1 · Plan"><h3>Prompt 1 · Plan</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Où sont les salles ? Où est la logique de conflit ? Quel fichier de contexte l'agent doit-il lire ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Décomposez en 3 sous-objectifs numérotés (données, API, interface). Demandez un plan.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Réutilisation du code existant ? Pièges Express ? Validation ? Granularité des commits ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Combien de tests, lesquels ? Comment vérifier le front ? Que doit-il vous rendre compte ?</dd></dl>
+<textarea class="promptbox" id="J2-2.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-2.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Prompt 2 · Valider et lancer l'implémentation"><h3>Prompt 2 · Valider et lancer l'implémentation</h3>
+<p class="guide-intro">Vous avez relu le plan. Validez, ajustez, et rappelez la discipline d'incréments.</p>
+<textarea class="promptbox" id="J2-2.p1" data-prompt data-save="J2-2.p1" placeholder="Écrivez votre prompt ici…"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Mode <code>Agent</code> avec <code>#codebase</code> ; relisez chaque fichier modifié avant d'accepter.</li><li>Si l'agent s'enlise, reprenez en <code>Edit</code> sur les seuls fichiers concernés.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Démarrez en mode plan (<code>Shift+Tab</code>), approuvez, puis laissez-le itérer jusqu'au vert.</li><li>Surveillez la consommation : <code>/cost</code>. Si la session devient lourde : <code>/compact</code> ou <code>/clear</code>.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li><code>npm test</code> vert (11 tests environ).</li><li><code>curl &quot;localhost:3000/rooms/available?start=2026-10-12T09:00:00.000Z&amp;end=2026-10-12T10:00:00.000Z&quot;</code> : Mont Blanc est absent.</li><li>Dans l'UI : saisissez début et fin, le sélecteur ne propose que des salles libres.</li></ul><h3>Mes observations</h3><textarea data-save="J2-2.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-3" data-title="J2-3 · Commande /review partagée (slash command et prompt file)">
+<header><span class="tid">J2-3</span><h2>Commande /review partagée (slash command et prompt file)</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-3.done"> Terminé</label>
+<div class="meta"><span>Durée : 20 min</span><span>Outil : Claude Code + Copilot</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Les revues de code ne suivent pas toutes la même checklist. Créez une commande de revue réutilisable, en lecture seule, disponible dans Claude Code (<code>/review</code>) et dans Copilot (prompt file).</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-3.acc0"><span><code>.claude/commands/review.md</code> : commande avec description, argument optionnel, outils limités à la lecture</span></label></li><li><label><input type="checkbox" data-save="J2-3.acc1"><span><code>.github/prompts/review.prompt.md</code> : équivalent pour Copilot</span></label></li><li><label><input type="checkbox" data-save="J2-3.acc2"><span>Checklist ordonnée : bugs et cas limites, sécurité, tests manquants, conventions d'AGENTS.md</span></label></li><li><label><input type="checkbox" data-save="J2-3.acc3"><span>Sortie : liste priorisée avec fichier:ligne</span></label></li><li><label><input type="checkbox" data-save="J2-3.acc4"><span>Testée sur 2 diffs, dont un diff volontairement fautif</span></label></li></ul><section class="prompt" data-label="Prompt de création de la commande"><h3>Prompt de création de la commande</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Pourquoi cette commande ? Pour quels outils ? Quel document de référence ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quels fichiers créer, où, pour chaque outil ? Quel argument ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Droits minimum ? Frontmatter ? Taille ? Ordre de la checklist ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quel format de sortie ? Comment testez-vous la commande ?</dd></dl>
+<textarea class="promptbox" id="J2-3.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-3.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Un prompt file se déclenche dans Chat avec <code>/review</code>. Selon la version de VS Code, le frontmatter utilise <code>agent</code> ou l'ancien <code>mode</code> : (<code>ask</code> suffit pour une lecture seule).</li><li>Utilisez <code>${input:cible}</code> pour passer un argument.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Le nom du fichier devient le nom de la commande. Rechargez la liste avec <code>/help</code>.</li><li>L'argument se récupère avec <code>$ARGUMENTS</code> dans le corps du fichier.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Tapez <code>/review</code> dans chaque outil : la commande apparaît.</li><li>Introduisez une clé API fictive en dur dans un fichier, committez sur une branche de test, relancez <code>/review</code> : le problème doit être remonté en tête.</li><li><code>git status</code> après la revue : aucun fichier modifié par la commande.</li></ul><h3>Mes observations</h3><textarea data-save="J2-3.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-4" data-title="J2-4 · Réservations récurrentes avec des sous-agents">
+<header><span class="tid">J2-4</span><h2>Réservations récurrentes avec des sous-agents</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-4.done"> Terminé</label>
+<div class="meta"><span>Durée : 40 min</span><span>Outil : Claude Code (sous-agents) · Copilot (agents personnalisés)</span><span>Niveau : Avancé</span></div></header>
+<h3>Le ticket</h3><div class="story">Les équipes veulent réserver une salle chaque semaine. Ajoutez les réservations récurrentes hebdomadaires, en orchestrant plusieurs agents spécialisés : un relecteur et un rédacteur de tests, pilotés par l'agent principal.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-4.acc0"><span>Deux sous-agents définis : <code>code-reviewer</code> (lecture seule) et <code>test-writer</code> (écrit des tests, ne touche pas au code de production)</span></label></li><li><label><input type="checkbox" data-save="J2-4.acc1"><span><code>POST /bookings</code> accepte <code>repeatWeekly</code> (1 à 12) et crée une réservation par semaine</span></label></li><li><label><input type="checkbox" data-save="J2-4.acc2"><span>Atomicité : un conflit sur une occurrence ne crée rien et renvoie 409 avec l'index fautif</span></label></li><li><label><input type="checkbox" data-save="J2-4.acc3"><span>Sans <code>repeatWeekly</code>, le comportement actuel est inchangé</span></label></li><li><label><input type="checkbox" data-save="J2-4.acc4"><span>Au moins 6 tests, un rapport de revue et un récapitulatif « qui a fait quoi »</span></label></li></ul><section class="prompt" data-label="Partie A · Créer les sous-agents"><h3>Partie A · Créer les sous-agents</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Pourquoi des sous-agents ? Quel document les agents doivent-ils respecter ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quels rôles, quels fichiers, pour quels outils ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Quels outils chacun a-t-il le droit d'utiliser ? À quoi sert la description ? Format de réponse ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Comment prouver qu'ils fonctionnent et qu'ils respectent leur périmètre ?</dd></dl>
+<textarea class="promptbox" id="J2-4.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-4.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Partie B · Orchestrer la fonctionnalité"><h3>Partie B · Orchestrer la fonctionnalité</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quelle fonctionnalité ? Quels agents sont disponibles ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Décrivez le pipeline : qui explore, qui code, qui teste, qui relit ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Règle d'atomicité ? Compatibilité ? Qui a le droit d'implémenter ? Point de contrôle humain ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quels tests ? Quels livrables en fin de tâche ?</dd></dl>
+<textarea class="promptbox" id="J2-4.p1" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-4.p1"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Créez des agents personnalisés dans <code>.github/agents/</code> (extension <code>.agent.md</code>), sélectionnables dans le sélecteur d'agents de Chat.</li><li>La délégation automatique entre agents dépend de la version ; sinon, enchaînez manuellement : implémenter, puis changer d'agent pour la revue.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li><code>/agents</code> liste et permet de créer des sous-agents ; vérifiez les outils accordés à chacun.</li><li>Observez les délégations dans la sortie. Comparez la taille du contexte principal (<code>/context</code>) avec et sans sous-agents.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li><code>npm test</code> vert.</li><li>Aucun fichier de production modifié par test-writer ; <code>git status</code> propre après une invocation de code-reviewer.</li><li>Le rapport de revue mentionne au moins un point réellement corrigé.</li></ul><h3>Mes observations</h3><textarea data-save="J2-4.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-5" data-title="J2-5 · Garde-fous : hooks Claude Code et hook Git">
+<header><span class="tid">J2-5</span><h2>Garde-fous : hooks Claude Code et hook Git</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-5.done"> Terminé</label>
+<div class="meta"><span>Durée : 30 min</span><span>Outil : Claude Code (hooks) · Git (pour Copilot)</span><span>Niveau : Avancé</span></div></header>
+<h3>Le ticket</h3><div class="story">L'équipe veut des règles qui s'appliquent à coup sûr, sans dépendre de la bonne volonté du modèle : formatage automatique, protection des secrets et des commandes destructrices, interdiction de conclure avec des tests rouges. Copilot n'utilise pas les hooks de Claude Code : un hook Git commun sert de filet.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-5.acc0"><span>Hook PostToolUse (Edit|Write) : Prettier est lancé sur chaque fichier modifié par l'agent</span></label></li><li><label><input type="checkbox" data-save="J2-5.acc1"><span>Hook PreToolUse (Bash) : bloque <code>rm -rf</code>, <code>git push --force</code> et toute commande qui lit <code>.env</code></span></label></li><li><label><input type="checkbox" data-save="J2-5.acc2"><span>Hook Stop : l'agent ne peut pas conclure si <code>npm test</code> échoue (sans boucle infinie)</span></label></li><li><label><input type="checkbox" data-save="J2-5.acc3"><span>Scripts en Node dans <code>.claude/hooks/</code> (compatibles Windows), configuration dans <code>.claude/settings.json</code></span></label></li><li><label><input type="checkbox" data-save="J2-5.acc4"><span>Hook Git <code>.githooks/pre-commit</code> : lint + tests, refus d'un fichier <code>.env</code></span></label></li></ul><section class="prompt" data-label="Partie A · Hooks Claude Code"><h3>Partie A · Hooks Claude Code</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quel risque voulez-vous couvrir ? Pourquoi un hook plutôt qu'une consigne ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Listez chaque hook avec son événement, son matcher et son effet.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Portabilité (Windows) ? Convention de blocage ? Risque de boucle ? Performance ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Comment démontrerez-vous chacun des 3 hooks ?</dd></dl>
+<textarea class="promptbox" id="J2-5.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-5.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Partie B · Hook Git commun (filet pour tous les outils)"><h3>Partie B · Hook Git commun (filet pour tous les outils)</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Pourquoi un hook Git en plus ? Qui n'est pas couvert par les hooks de l'agent ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quel hook, où, avec quelles vérifications ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Compatibilité, dépendances, documentation ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quels cas testez-vous (refus, acceptation, durée) ?</dd></dl>
+<textarea class="promptbox" id="J2-5.p1" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-5.p1"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Les hooks de session de Claude Code ne s'appliquent pas à Copilot : c'est le rôle du hook Git de la partie B.</li><li>Certaines versions de VS Code proposent des hooks d'agent en préversion : vérifiez la documentation de votre version avant de vous y fier.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li><code>/hooks</code> affiche la configuration active. Les hooks s'appliquent à la session suivante ou après rechargement.</li><li>Pour tester le blocage, demandez volontairement l'action interdite et lisez le message renvoyé à l'agent.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Démonstration des 3 hooks Claude Code (a, b, c).</li><li><code>git commit</code> avec un test cassé : refusé.</li><li>Créez un fichier <code>.env</code> factice : le commit est refusé, mais <code>.gitignore</code> l'ignore déjà (testez avec <code>git add -f</code>).</li></ul><h3>Mes observations</h3><textarea data-save="J2-5.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-6" data-title="J2-6 · CI, revue de Pull Request et documentation">
+<header><span class="tid">J2-6</span><h2>CI, revue de Pull Request et documentation</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-6.done"> Terminé</label>
+<div class="meta"><span>Durée : 25 min</span><span>Outil : Copilot + Claude Code</span><span>Niveau : Moyen</span></div></header>
+<h3>Le ticket</h3><div class="story">Dernière étape de l'industrialisation : chaque Pull Request doit être testée automatiquement et relue, et la documentation doit refléter la réalité du projet.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-6.acc0"><span><code>.github/workflows/ci.yml</code> : lint et tests sur chaque push et pull request</span></label></li><li><label><input type="checkbox" data-save="J2-6.acc1"><span>Une PR avec un test cassé affiche une CI rouge, une PR propre une CI verte</span></label></li><li><label><input type="checkbox" data-save="J2-6.acc2"><span><code>README.md</code> réécrit (80 lignes max) et <code>docs/API.md</code> avec chaque endpoint et un exemple curl exécuté</span></label></li><li><label><input type="checkbox" data-save="J2-6.acc3"><span>Revue croisée de la PR : <code>/review</code> de Claude Code et revue Copilot, comparées</span></label></li></ul><section class="prompt" data-label="Partie A · Pipeline CI"><h3>Partie A · Pipeline CI</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quel dépôt, quels scripts, quel runtime ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quel fichier, quel déclencheur, quelles étapes ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Versions des actions, permissions, cache, durée, secrets ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Comment vérifier le vert ET le rouge ?</dd></dl>
+<textarea class="promptbox" id="J2-6.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-6.p0"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><section class="prompt" data-label="Partie B · README et référence d'API"><h3>Partie B · README et référence d'API</h3>
+<p class="guide-intro">Complétez chacun des quatre blocs dans la zone ci-dessous, puis copiez le prompt et collez-le dans le chat de votre outil.</p>
+<dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Où en est la documentation ? Qu'est-ce qui a changé dans le projet ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Quels fichiers produire ?</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Comment éviter qu'il documente des choses qui n'existent pas ?</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Quelles informations par endpoint ? Quel test d'un nouvel arrivant ?</dd></dl>
+<textarea class="promptbox" id="J2-6.p1" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J2-6.p1"></textarea>
+<div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Sur GitHub, demandez Copilot comme relecteur de la PR (si la fonction est activée sur votre dépôt) et comparez ses commentaires avec <code>/review</code>.</li><li>Copilot Chat peut générer le YAML : relisez les versions d'actions et les permissions.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Lancez <code>/review</code> sur la branche de la PR. Pour automatiser en CI, <code>claude -p</code> (mode non interactif) existe, mais nécessite un secret : à discuter, pas à faire ici.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>La CI passe au vert sur votre branche.</li><li>Cassez un test dans une PR de démonstration : la CI devient rouge.</li><li>Exécutez chaque exemple curl de <code>docs/API.md</code>.</li></ul><h3>Mes observations</h3><textarea data-save="J2-6.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+<article class="ticket" id="J2-7" data-title="J2-7 · Bilan : mon workflow IA complet">
+<header><span class="tid">J2-7</span><h2>Bilan : mon workflow IA complet</h2>
+<label class="done"><input type="checkbox" class="done-box" data-save="J2-7.done"> Terminé</label>
+<div class="meta"><span>Durée : 10 min</span><span>Outil : Aucun</span><span>Niveau : Facile</span></div></header>
+<h3>Le ticket</h3><div class="story">Assemblez ce que vous avez construit en un workflow que vous pourriez expliquer à une équipe, puis présentez-le en 3 minutes.</div>
+<h3>Critères d'acceptation</h3><ul class="checks"><li><label><input type="checkbox" data-save="J2-7.acc0"><span>Un schéma ou une liste de 6 étapes maximum, du ticket à la PR</span></label></li><li><label><input type="checkbox" data-save="J2-7.acc1"><span>Pour chaque étape : l'outil, la règle (consigne ou hook) et le point de contrôle humain</span></label></li></ul><div class="block"><label for="J2-7.wf"><strong>Mon workflow (ticket → PR) en 6 étapes maximum</strong><span class="hint">Exemple : ticket → /commande de plan → agent + sous-agents → hooks → PR → CI + /review.</span></label><textarea id="J2-7.wf" data-save="J2-7.wf" data-obs="Mon workflow (ticket → PR) en 6 étapes maximum"></textarea></div><div class="block"><label for="J2-7.garde"><strong>Les garde-fous que j'installerais en premier dans mon projet</strong><span class="hint">Consigne, commande, hook, CI : lequel et pourquoi ?</span></label><textarea id="J2-7.garde" data-save="J2-7.garde" data-obs="Les garde-fous que j'installerais en premier dans mon projet"></textarea></div><div class="block"><label for="J2-7.lundi"><strong>Ce que je mets en place lundi</strong><span class="hint">Une seule chose concrète.</span></label><textarea id="J2-7.lundi" data-save="J2-7.lundi" data-obs="Ce que je mets en place lundi"></textarea></div><h3>Mes observations</h3><textarea data-save="J2-7.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
+
+<footer>Formation IA pour les devs · Human Coders · Version participants</footer>
+</main>
+<script>
+(function(){
+  var KEY = document.body.getAttribute('data-key');
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function grow(t){ if (!t.value) { t.style.height = ''; return; } t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+  var fields = document.querySelectorAll('[data-save]');
+  Array.prototype.forEach.call(fields, function(el){
+    var k = el.getAttribute('data-save');
+    if (k in state) { if (el.type === 'checkbox') el.checked = !!state[k]; else el.value = state[k]; }
+    else if (el.hasAttribute('data-template')) { el.value = el.getAttribute('data-template'); }
+    if (el.tagName === 'TEXTAREA') grow(el);
+    var h = function(){
+      state[k] = el.type === 'checkbox' ? el.checked : el.value;
+      save(); if (el.tagName === 'TEXTAREA') grow(el); update();
+    };
+    el.addEventListener('input', h); el.addEventListener('change', h);
+  });
+  function update(){
+    var tickets = document.querySelectorAll('.ticket'), done = 0;
+    Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); if (c && c.checked) done++; });
+    var pct = tickets.length ? Math.round(100 * done / tickets.length) : 0;
+    var bar = document.getElementById('bar'); if (bar) bar.style.width = pct + '%';
+    var lab = document.getElementById('plabel'); if (lab) lab.textContent = done + ' / ' + tickets.length + ' tickets terminés';
+  }
+  function copy(text, btn){
+    var ok = function(){ var o = btn.textContent; btn.textContent = 'Copié'; setTimeout(function(){ btn.textContent = o; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, function(){ fallback(text); ok(); }); }
+    else { fallback(text); ok(); }
+  }
+  function fallback(text){ var a = document.createElement('textarea'); a.value = text; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(a); }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-copy]'); if (!b) return;
+    var p = b.closest('.prompt'); var src = b.getAttribute('data-copy');
+    if (src === 'box') copy(p.querySelector('textarea[data-prompt]').value, b);
+    else copy(p.querySelector('pre.solution').textContent, b);
+  });
+  var ex = document.getElementById('export');
+  if (ex) ex.addEventListener('click', function(){
+    var out = '# ' + document.title + '\n\n';
+    Array.prototype.forEach.call(document.querySelectorAll('.ticket'), function(t){
+      out += '## ' + t.getAttribute('data-title') + '\n\n';
+      Array.prototype.forEach.call(t.querySelectorAll('.prompt'), function(p){
+        out += '### ' + p.getAttribute('data-label') + '\n\n```text\n' + p.querySelector('textarea[data-prompt]').value.trim() + '\n```\n\n';
+      });
+      Array.prototype.forEach.call(t.querySelectorAll('textarea[data-obs]'), function(o){ if (o.value.trim()) out += '**' + o.getAttribute('data-obs') + '**\n\n' + o.value.trim() + '\n\n'; });
+    });
+    var blob = new Blob([out], {type:'text/markdown'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = KEY + '.md'; a.click();
+  });
+  var rs = document.getElementById('reset');
+  if (rs) rs.addEventListener('click', function(){ if (confirm('Effacer toutes vos saisies de ce TP ?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } });
+  update();
+  window.addEventListener('load', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
+  window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
+})();
+</script>
+</body></html>

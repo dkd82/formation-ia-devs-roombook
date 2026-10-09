@@ -1,0 +1,16 @@
+{
+  "name": "roombook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RoomBook - réservation de salles de réunion (projet fil rouge de la formation IA pour les devs)",
+  "scripts": {
+    "back": "npm --prefix backend start",
+    "front": "http-server frontend -p 5173 -c-1",
+    "test": "npm --prefix backend test",
+    "lint": "prettier --check ."
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "prettier": "^3.3.3"
+  }
+}

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Hook Git versionné. Activation : git config core.hooksPath .githooks
+# Refuse le commit si un fichier .env est indexé, si le lint ou les tests échouent.
+
+if git diff --cached --name-only | grep -E '(^|/)\.env($|\.)' | grep -vE '\.env\.example$' >/dev/null; then
+  echo "Commit refusé : un fichier .env est indexé (git restore --staged <fichier>)." >&2
+  exit 1
+fi
+
+echo "Lint..."
+npm run lint --silent || { echo "Commit refusé : le lint échoue (npm run lint)." >&2; exit 1; }
+
+echo "Tests..."
+npm test --silent || { echo "Commit refusé : les tests échouent (npm test)." >&2; exit 1; }

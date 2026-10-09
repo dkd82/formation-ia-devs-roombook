@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoomBook</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>RoomBook</h1>
+      <p>Réservation de salles de réunion</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Réserver une salle</h2>
+        <form id="booking-form">
+          <label
+            >Salle
+            <select id="room" required></select
+          ></label>
+          <label>Titre <input id="title" required /></label>
+          <label>Organisateur <input id="organizer" required /></label>
+          <label>Début <input id="start" type="datetime-local" required /></label>
+          <label>Fin <input id="end" type="datetime-local" required /></label>
+          <button type="submit">Réserver</button>
+          <p id="message" role="status"></p>
+        </form>
+      </section>
+
+      <section>
+        <h2>Réservations</h2>
+        <ul id="bookings"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
