@@ -49,7 +49,7 @@ dans les paramètres).
 | Template | Copier vers |
 | --- | --- |
 | `shared/AGENTS.template.md` | `AGENTS.md` (source unique des règles du projet) |
-| `shared/pre-commit` | `.githooks/pre-commit` puis `git config core.hooksPath .githooks` |
+| `shared/pre-commit` | `.githooks/pre-commit`, puis `chmod +x .githooks/pre-commit` (macOS/Linux) et `git config core.hooksPath .githooks` |
 | `shared/ci.yml` | `.github/workflows/ci.yml` |
 | `shared/pull_request_template.md` | `.github/pull_request_template.md` |
 | `shared/ticket.md` | `.github/ISSUE_TEMPLATE/ticket.md` |
