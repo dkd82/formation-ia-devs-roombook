@@ -21,7 +21,20 @@ pre{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(
 button,.btn{font:inherit;font-size:.85rem;padding:.4rem .75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
 button:hover{border-color:var(--brand)}
 button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
-main{max-width:980px;margin:0 auto;padding:1rem 1rem 4rem}
+.layout{display:grid;grid-template-columns:268px minmax(0,1fr);gap:2rem;max-width:1360px;margin:0 auto;padding:0 1.25rem}
+main{min-width:0;padding:1rem 0 4rem}
+nav.side{position:sticky;top:var(--top-h,72px);align-self:start;max-height:calc(100vh - var(--top-h,72px) - 1rem);overflow:auto;padding:1.2rem 0 1rem;font-size:.9rem}
+nav.side .nt{font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .35rem .6rem}
+nav.side .nt:first-child{margin-top:0}
+nav.side ul{list-style:none;margin:0;padding:0}
+nav.side a{display:block;padding:.38rem .6rem;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.3}
+nav.side a:hover{background:var(--soft)}
+nav.side a.active{background:var(--soft);color:var(--brand);font-weight:700}
+nav.side a .nid{font-weight:700;margin-right:.35rem}
+nav.side a.is-done{color:var(--muted)}
+nav.side a.is-done::after{content:" (terminé)";font-size:.78rem}
+.card{scroll-margin-top:90px}
+@media (max-width:1000px){.layout{display:block;padding:0 1rem}nav.side{position:static;max-height:none;border-bottom:1px solid var(--line);padding-bottom:.8rem}nav.side ul{display:flex;flex-wrap:wrap;gap:.3rem}nav.side .nt{margin-left:0}}
 .banner{background:#fef3c7;color:#78350f;border:1px solid #f59e0b;border-radius:8px;padding:.75rem 1rem;margin:1rem 0;font-weight:600}
 h2{font-size:1.35rem;margin:.2rem 0}
 h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
@@ -80,26 +93,29 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
 .toc a{text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);padding:.25rem .65rem;border-radius:999px;font-size:.88rem}
 .toc a:hover{border-color:var(--brand)}
 @media (max-width:760px){.top{position:static}}
-@media print{.top .actions,button,.toc{display:none!important}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
+@media print{.top .actions,button,.toc,nav.side{display:none!important}.layout{display:block}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
 </style></head>
 <body data-key="tp-ia-devs-jour1-participant-v1">
 <div class="top"><h1>TP Jour 1 · RoomBook : de la découverte à la fonctionnalité livrée <span class="badge">Participants</span></h1>
 <div class="progress"><small id="plabel"></small><div class="bar"><i id="bar"></i></div></div>
 <div class="actions"><button id="export">Exporter mes prompts (.md)</button> <button onclick="window.print()">Imprimer</button> <button id="reset">Réinitialiser</button></div>
 </div>
+<div class="layout">
+<nav class="side" aria-label="Sommaire"><div class="nt">Sommaire</div><ul><li><a href="#intro">Introduction</a></li><li><a href="#setup">Mise en route</a></li><li><a href="#anatomie">Anatomie d'un prompt</a></li><li><a href="#memo">Aide-mémoire des outils</a></li></ul>
+<div class="nt">Tickets</div><ul><li><a href="#J1-1"><span class="nid">J1-1</span>Explorer une codebase inconnue</a></li><li><a href="#J1-2"><span class="nid">J1-2</span>Annuler une réservation (backend + frontend)</a></li><li><a href="#J1-3"><span class="nid">J1-3</span>Bug : impossible de réserver juste après une autre réservation</a></li><li><a href="#J1-4"><span class="nid">J1-4</span>Renforcer les tests de création de réservation</a></li><li><a href="#J1-5"><span class="nid">J1-5</span>Refactorer la route de création</a></li><li><a href="#J1-6"><span class="nid">J1-6</span>Comparer IDE assisté et agent autonome</a></li></ul><div class="nt">Fin de journée</div><ul><li><a href="#bilan">Bilan de la journée</a></li></ul></nav>
 <main>
 
-<div class="card"><p>Vous rejoignez l'équipe de RoomBook, une application de réservation de salles de réunion (backend Node/Express + frontend JavaScript). Pendant ce TP, vous allez la faire évoluer ticket après ticket : explorer, ajouter une fonctionnalité, corriger un bug, renforcer les tests, refactorer, puis comparer vos deux outils.</p><p><strong>Durée totale :</strong> ≈ 2 h 30 · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p><div class="toc"><a href="#J1-1">J1-1</a><a href="#J1-2">J1-2</a><a href="#J1-3">J1-3</a><a href="#J1-4">J1-4</a><a href="#J1-5">J1-5</a><a href="#J1-6">J1-6</a></div></div>
+<div class="card" id="intro"><p>Vous rejoignez l'équipe de RoomBook, une application de réservation de salles de réunion (backend Node/Express + frontend JavaScript). Pendant ce TP, vous allez la faire évoluer ticket après ticket : explorer, ajouter une fonctionnalité, corriger un bug, renforcer les tests, refactorer, puis comparer vos deux outils.</p><p><strong>Durée totale :</strong> ≈ 2 h 30 · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p></div>
 
 
 
-<details class="card" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec l'extension GitHub Copilot (Chat) connectée</li><li>Claude Code installé en ligne de commande (commande <code>claude</code> disponible dans le terminal)</li><li>Le dépôt Git de la formation fourni par le formateur (votre fork ou votre copie du dépôt)</li></ul><h3>Étapes</h3><ol><li>Clonez votre dépôt (<code>git clone &lt;url&gt;</code>), ouvrez-le dans VS Code et restez sur la branche <code>main</code>, qui contient le point de départ du jour 1.</li><li>Installez les dépendances : <code>npm install</code> puis <code>npm --prefix backend install</code>.</li><li>Vérifiez que les tests passent : <code>npm test</code> (3 tests verts attendus).</li><li>Lancez l'API (<code>npm run back</code>) et, dans un 2e terminal, le frontend (<code>npm run front</code>), puis ouvrez http://localhost:5173.</li><li>Vérifiez l'état du dépôt : <code>git status</code> (aucune modification) et <code>git log --oneline</code>.</li><li>Pour chaque ticket, travaillez sur une branche : <code>git switch -c ticket-1</code>, <code>git switch -c ticket-2</code>…</li></ol></details>
+<details class="card" id="setup" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec l'extension GitHub Copilot (Chat) connectée</li><li>Claude Code installé en ligne de commande (commande <code>claude</code> disponible dans le terminal)</li><li>Le dépôt Git de la formation fourni par le formateur (votre fork ou votre copie du dépôt)</li></ul><h3>Étapes</h3><ol><li>Clonez votre dépôt (<code>git clone &lt;url&gt;</code>), ouvrez-le dans VS Code et restez sur la branche <code>main</code>, qui contient le point de départ du jour 1.</li><li>Installez les dépendances : <code>npm install</code> puis <code>npm --prefix backend install</code>.</li><li>Vérifiez que les tests passent : <code>npm test</code> (3 tests verts attendus).</li><li>Lancez l'API (<code>npm run back</code>) et, dans un 2e terminal, le frontend (<code>npm run front</code>), puis ouvrez http://localhost:5173.</li><li>Vérifiez l'état du dépôt : <code>git status</code> (aucune modification) et <code>git log --oneline</code>.</li><li>Pour chaque ticket, travaillez sur une branche : <code>git switch -c ticket-1</code>, <code>git switch -c ticket-2</code>…</li></ol></details>
 
-<details class="card" open><summary>L'anatomie d'un bon prompt</summary>
+<details class="card" id="anatomie" open><summary>L'anatomie d'un bon prompt</summary>
 <div class="legend"><div class="k-contexte"><strong>Contexte</strong><br>Où en est-on ? Techno, fichiers, situation.</div><div class="k-tache"><strong>Tâche</strong><br>Quel objectif précis et unique ?</div><div class="k-contraintes"><strong>Contraintes</strong><br>Style, limites, ce qu'il ne faut pas toucher.</div><div class="k-criteres"><strong>Critères de succès</strong><br>Comment saura-t-on que c'est réussi ?</div></div>
 <h3>Règles de travail</h3><ul class="plain"><li>Écrivez votre prompt vous-même dans les 4 blocs avant de lancer l'outil : contexte, tâche, contraintes, critères de succès.</li><li>Relisez chaque diff (<code>git diff</code>) avant d'accepter. Vous restez responsable du code.</li><li>Si l'outil tourne en rond après 3 essais : nouvelle session, meilleur contexte.</li><li>Un ticket = une branche = un ou plusieurs commits lisibles.</li></ul></details>
 
-<details class="card"><summary>Aide-mémoire des outils</summary><div class="tools">
+<details class="card" id="memo"><summary>Aide-mémoire des outils</summary><div class="tools">
 <div><h4>GitHub Copilot (VS Code)</h4><ul>
 <li>Modes de Chat : <code>Ask</code> (questions), <code>Edit</code> (modifications ciblées), <code>Agent</code> (tâches multi-fichiers avec exécution)</li>
 <li>Contexte : <code>#file:chemin</code>, <code>#codebase</code>, <code>#selection</code></li>
@@ -178,9 +194,10 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
 <dl class="guide"><dt><span class="chip k-contexte">Contexte</span>Où en est-on ? Techno, fichiers, situation.</dt><dd>Quels fichiers front ? L'API sait-elle déjà filtrer ?</dd><dt><span class="chip k-tache">Tâche</span>Quel objectif précis et unique ?</dt><dd>Un seul objectif, formulé côté utilisateur.</dd><dt><span class="chip k-contraintes">Contraintes</span>Style, limites, ce qu'il ne faut pas toucher.</dt><dd>Techno, dépendances, périmètre.</dd><dt><span class="chip k-criteres">Critères de succès</span>Comment saura-t-on que c'est réussi ?</dt><dd>Comment vérifier dans le navigateur ?</dd></dl>
 <textarea class="promptbox" id="J1-6.p0" data-prompt data-template="Contexte :&#10;&#10;Tâche :&#10;&#10;Contraintes :&#10;&#10;Critères de succès :&#10;" data-save="J1-6.p0"></textarea>
 <div class="row"><button class="primary" data-copy="box">Copier le prompt</button></div></section><h3>Conseils par outil</h3><div class="tools"><div><h4>GitHub Copilot (VS Code)</h4><ul><li>Utilisez Copilot Chat en mode <code>Edit</code> ou <code>Agent</code> dans VS Code, avec les 3 fichiers en contexte.</li><li>Notez le nombre d'allers-retours et les clics d'acceptation.</li></ul></div><div><h4>Claude Code (CLI)</h4><ul><li>Lancez <code>claude</code> sur la 2e branche, donnez le même prompt, laissez-le agir.</li><li>Notez le temps, les fichiers touchés (<code>git diff --stat</code>) et les questions posées.</li></ul></div></div><h3>Vérifier avant de passer au ticket suivant</h3><ul class="plain"><li>Les deux branches fonctionnent dans le navigateur.</li><li><code>git diff --stat ticket-6-copilot ticket-6-claude</code> pour comparer les périmètres.</li></ul><h3>Grille de comparaison</h3><table><tr><th>Critère</th><th>GitHub Copilot</th><th>Claude Code</th></tr><tr><td>Temps total</td><td><textarea data-save="J1-6.cmp0c" data-obs="Comparaison : Temps total (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp0k" data-obs="Comparaison : Temps total (Claude Code)"></textarea></td></tr><tr><td>Nombre d'itérations</td><td><textarea data-save="J1-6.cmp1c" data-obs="Comparaison : Nombre d'itérations (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp1k" data-obs="Comparaison : Nombre d'itérations (Claude Code)"></textarea></td></tr><tr><td>Fichiers modifiés</td><td><textarea data-save="J1-6.cmp2c" data-obs="Comparaison : Fichiers modifiés (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp2k" data-obs="Comparaison : Fichiers modifiés (Claude Code)"></textarea></td></tr><tr><td>Lisibilité du diff</td><td><textarea data-save="J1-6.cmp3c" data-obs="Comparaison : Lisibilité du diff (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp3k" data-obs="Comparaison : Lisibilité du diff (Claude Code)"></textarea></td></tr><tr><td>Confiance dans le résultat (1 à 5)</td><td><textarea data-save="J1-6.cmp4c" data-obs="Comparaison : Confiance dans le résultat (1 à 5) (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp4k" data-obs="Comparaison : Confiance dans le résultat (1 à 5) (Claude Code)"></textarea></td></tr><tr><td>Points forts / points faibles</td><td><textarea data-save="J1-6.cmp5c" data-obs="Comparaison : Points forts / points faibles (Copilot)"></textarea></td><td><textarea data-save="J1-6.cmp5k" data-obs="Comparaison : Points forts / points faibles (Claude Code)"></textarea></td></tr></table><h3>Mes observations</h3><textarea data-save="J1-6.obs" data-obs="Observations" placeholder="Ce que l'IA a bien fait, ce qu'elle a raté, ce que j'ai corrigé…"></textarea></article>
-<div class="card"><h2>Bilan de la journée</h2><div class="block"><label for="bilan0"><strong>Quel est mon meilleur prompt de la journée, et pourquoi ?</strong></label><textarea id="bilan0" data-save="bilan.0" data-obs="Quel est mon meilleur prompt de la journée, et pourquoi ?"></textarea></div><div class="block"><label for="bilan1"><strong>Quelle erreur de l'IA ai-je dû corriger ?</strong></label><textarea id="bilan1" data-save="bilan.1" data-obs="Quelle erreur de l'IA ai-je dû corriger ?"></textarea></div><div class="block"><label for="bilan2"><strong>Qu'est-ce que je ferai différemment demain ?</strong></label><textarea id="bilan2" data-save="bilan.2" data-obs="Qu'est-ce que je ferai différemment demain ?"></textarea></div></div>
+<div class="card" id="bilan"><h2>Bilan de la journée</h2><div class="block"><label for="bilan0"><strong>Quel est mon meilleur prompt de la journée, et pourquoi ?</strong></label><textarea id="bilan0" data-save="bilan.0" data-obs="Quel est mon meilleur prompt de la journée, et pourquoi ?"></textarea></div><div class="block"><label for="bilan1"><strong>Quelle erreur de l'IA ai-je dû corriger ?</strong></label><textarea id="bilan1" data-save="bilan.1" data-obs="Quelle erreur de l'IA ai-je dû corriger ?"></textarea></div><div class="block"><label for="bilan2"><strong>Qu'est-ce que je ferai différemment demain ?</strong></label><textarea id="bilan2" data-save="bilan.2" data-obs="Qu'est-ce que je ferai différemment demain ?"></textarea></div></div>
 <footer>Formation IA pour les devs · Human Coders · Version participants</footer>
 </main>
+</div>
 <script>
 (function(){
   var KEY = document.body.getAttribute('data-key');
@@ -205,6 +222,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
     Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); if (c && c.checked) done++; });
     var pct = tickets.length ? Math.round(100 * done / tickets.length) : 0;
     var bar = document.getElementById('bar'); if (bar) bar.style.width = pct + '%';
+    Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); var a = document.querySelector('nav.side a[href="#' + t.id + '"]'); if (a) a.classList.toggle('is-done', !!(c && c.checked)); });
     var lab = document.getElementById('plabel'); if (lab) lab.textContent = done + ' / ' + tickets.length + ' tickets terminés';
   }
   function copy(text, btn){
@@ -234,6 +252,19 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
   });
   var rs = document.getElementById('reset');
   if (rs) rs.addEventListener('click', function(){ if (confirm('Effacer toutes vos saisies de ce TP ?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } });
+  var topbar = document.querySelector('.top');
+  function setTop(){ if (topbar) document.documentElement.style.setProperty('--top-h', (topbar.offsetHeight + 8) + 'px'); }
+  setTop(); window.addEventListener('resize', setTop);
+  var links = document.querySelectorAll('nav.side a'), map = {};
+  Array.prototype.forEach.call(links, function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var targets = Object.keys(map).map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  function spy(){
+    var y = (topbar ? topbar.offsetHeight : 0) + 40, cur = targets[0];
+    targets.forEach(function(t){ if (t.getBoundingClientRect().top <= y) cur = t; });
+    Array.prototype.forEach.call(links, function(a){ a.classList.remove('active'); });
+    if (cur && map[cur.id]) { map[cur.id].classList.add('active'); }
+  }
+  window.addEventListener('scroll', spy, { passive: true }); spy();
   update();
   window.addEventListener('load', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
   window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });

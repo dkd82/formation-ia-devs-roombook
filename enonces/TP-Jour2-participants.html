@@ -21,7 +21,20 @@ pre{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;background:var(
 button,.btn{font:inherit;font-size:.85rem;padding:.4rem .75rem;border-radius:6px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
 button:hover{border-color:var(--brand)}
 button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
-main{max-width:980px;margin:0 auto;padding:1rem 1rem 4rem}
+.layout{display:grid;grid-template-columns:268px minmax(0,1fr);gap:2rem;max-width:1360px;margin:0 auto;padding:0 1.25rem}
+main{min-width:0;padding:1rem 0 4rem}
+nav.side{position:sticky;top:var(--top-h,72px);align-self:start;max-height:calc(100vh - var(--top-h,72px) - 1rem);overflow:auto;padding:1.2rem 0 1rem;font-size:.9rem}
+nav.side .nt{font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .35rem .6rem}
+nav.side .nt:first-child{margin-top:0}
+nav.side ul{list-style:none;margin:0;padding:0}
+nav.side a{display:block;padding:.38rem .6rem;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.3}
+nav.side a:hover{background:var(--soft)}
+nav.side a.active{background:var(--soft);color:var(--brand);font-weight:700}
+nav.side a .nid{font-weight:700;margin-right:.35rem}
+nav.side a.is-done{color:var(--muted)}
+nav.side a.is-done::after{content:" (terminé)";font-size:.78rem}
+.card{scroll-margin-top:90px}
+@media (max-width:1000px){.layout{display:block;padding:0 1rem}nav.side{position:static;max-height:none;border-bottom:1px solid var(--line);padding-bottom:.8rem}nav.side ul{display:flex;flex-wrap:wrap;gap:.3rem}nav.side .nt{margin-left:0}}
 .banner{background:#fef3c7;color:#78350f;border:1px solid #f59e0b;border-radius:8px;padding:.75rem 1rem;margin:1rem 0;font-weight:600}
 h2{font-size:1.35rem;margin:.2rem 0}
 h3{font-size:1.02rem;margin:1.1rem 0 .4rem}
@@ -80,26 +93,29 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
 .toc a{text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);padding:.25rem .65rem;border-radius:999px;font-size:.88rem}
 .toc a:hover{border-color:var(--brand)}
 @media (max-width:760px){.top{position:static}}
-@media print{.top .actions,button,.toc{display:none!important}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
+@media print{.top .actions,button,.toc,nav.side{display:none!important}.layout{display:block}.top{position:static}.ticket{break-inside:avoid-page}details>*{display:block}textarea{border:1px solid #999}}
 </style></head>
 <body data-key="tp-ia-devs-jour2-participant-v1">
 <div class="top"><h1>TP Jour 2 · RoomBook : industrialiser avec l'IA <span class="badge">Participants</span></h1>
 <div class="progress"><small id="plabel"></small><div class="bar"><i id="bar"></i></div></div>
 <div class="actions"><button id="export">Exporter mes prompts (.md)</button> <button onclick="window.print()">Imprimer</button> <button id="reset">Réinitialiser</button></div>
 </div>
+<div class="layout">
+<nav class="side" aria-label="Sommaire"><div class="nt">Sommaire</div><ul><li><a href="#intro">Introduction</a></li><li><a href="#setup">Mise en route</a></li><li><a href="#anatomie">Anatomie d'un prompt</a></li><li><a href="#memo">Aide-mémoire des outils</a></li></ul>
+<div class="nt">Tickets</div><ul><li><a href="#J2-1"><span class="nid">J2-1</span>Le fichier de contexte partagé</a></li><li><a href="#J2-2"><span class="nid">J2-2</span>Salles : capacité, équipements et recherche de salle libre</a></li><li><a href="#J2-3"><span class="nid">J2-3</span>Commande /review partagée (slash command et prompt file)</a></li><li><a href="#J2-4"><span class="nid">J2-4</span>Réservations récurrentes avec des sous-agents</a></li><li><a href="#J2-5"><span class="nid">J2-5</span>Garde-fous : hooks Claude Code et hook Git</a></li><li><a href="#J2-6"><span class="nid">J2-6</span>CI, revue de Pull Request et documentation</a></li><li><a href="#J2-7"><span class="nid">J2-7</span>Bilan : mon workflow IA complet</a></li></ul></nav>
 <main>
 
-<div class="card"><p>RoomBook grandit. Aujourd'hui, vous passez d'un usage individuel de l'IA à un système d'équipe : un fichier de contexte partagé, des commandes réutilisables, des sous-agents spécialisés, des hooks qui garantissent les règles, une CI et une documentation à jour. Chaque ticket fait évoluer l'application et son outillage.</p><p><strong>Durée totale :</strong> ≈ 3 h · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p><div class="toc"><a href="#J2-1">J2-1</a><a href="#J2-2">J2-2</a><a href="#J2-3">J2-3</a><a href="#J2-4">J2-4</a><a href="#J2-5">J2-5</a><a href="#J2-6">J2-6</a><a href="#J2-7">J2-7</a></div></div>
+<div class="card" id="intro"><p>RoomBook grandit. Aujourd'hui, vous passez d'un usage individuel de l'IA à un système d'équipe : un fichier de contexte partagé, des commandes réutilisables, des sous-agents spécialisés, des hooks qui garantissent les règles, une CI et une documentation à jour. Chaque ticket fait évoluer l'application et son outillage.</p><p><strong>Durée totale :</strong> ≈ 3 h · <strong>Outils :</strong> GitHub Copilot (VS Code) et Claude Code (CLI)</p></div>
 
 
 
-<details class="card" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec GitHub Copilot Chat, Claude Code en ligne de commande</li><li>Votre dépôt RoomBook de la veille, ou à défaut la branche <code>jour2-start</code> du dépôt de la formation (bug corrigé, annulation et 6 tests)</li><li>Un dépôt GitHub (pour la CI et la revue de PR) : poussez votre projet dessus</li></ul><h3>Étapes</h3><ol><li>Repartez de votre dépôt, ou récupérez la branche de départ : <code>git fetch origin</code> puis <code>git switch jour2-start</code>.</li><li>Installez : <code>npm install</code> puis <code>npm --prefix backend install</code>. Committez les fichiers <code>package-lock.json</code> générés (la CI utilisera <code>npm ci</code>).</li><li>Vérifiez : <code>npm test</code> (6 tests verts au minimum) et <code>npm run lint</code> (aucun avertissement).</li><li>Créez une branche par ticket : <code>git switch -c j2-ticket-1</code>, etc.</li></ol></details>
+<details class="card" id="setup" open><summary>Mise en route</summary><h3>Prérequis</h3><ul class="plain"><li>Node.js 20+, Git, VS Code avec GitHub Copilot Chat, Claude Code en ligne de commande</li><li>Votre dépôt RoomBook de la veille, ou à défaut la branche <code>jour2-start</code> du dépôt de la formation (bug corrigé, annulation et 6 tests)</li><li>Un dépôt GitHub (pour la CI et la revue de PR) : poussez votre projet dessus</li></ul><h3>Étapes</h3><ol><li>Repartez de votre dépôt, ou récupérez la branche de départ : <code>git fetch origin</code> puis <code>git switch jour2-start</code>.</li><li>Installez : <code>npm install</code> puis <code>npm --prefix backend install</code>. Committez les fichiers <code>package-lock.json</code> générés (la CI utilisera <code>npm ci</code>).</li><li>Vérifiez : <code>npm test</code> (6 tests verts au minimum) et <code>npm run lint</code> (aucun avertissement).</li><li>Créez une branche par ticket : <code>git switch -c j2-ticket-1</code>, etc.</li></ol></details>
 
-<details class="card" open><summary>L'anatomie d'un bon prompt</summary>
+<details class="card" id="anatomie" open><summary>L'anatomie d'un bon prompt</summary>
 <div class="legend"><div class="k-contexte"><strong>Contexte</strong><br>Où en est-on ? Techno, fichiers, situation.</div><div class="k-tache"><strong>Tâche</strong><br>Quel objectif précis et unique ?</div><div class="k-contraintes"><strong>Contraintes</strong><br>Style, limites, ce qu'il ne faut pas toucher.</div><div class="k-criteres"><strong>Critères de succès</strong><br>Comment saura-t-on que c'est réussi ?</div></div>
 <h3>Règles de travail</h3><ul class="plain"><li>Le prompt reste structuré en 4 blocs : contexte, tâche, contraintes, critères de succès.</li><li>Les fichiers de configuration créés (commandes, agents, hooks) sont du code : relisez-les et committez-les.</li><li>Un hook s'exécute avec vos droits : ne copiez jamais un hook que vous n'avez pas lu.</li><li>Tout ce que l'IA affirme sur une commande ou une option doit être vérifié en l'exécutant.</li></ul></details>
 
-<details class="card"><summary>Aide-mémoire des outils</summary><div class="tools">
+<details class="card" id="memo"><summary>Aide-mémoire des outils</summary><div class="tools">
 <div><h4>GitHub Copilot (VS Code)</h4><ul>
 <li>Modes de Chat : <code>Ask</code> (questions), <code>Edit</code> (modifications ciblées), <code>Agent</code> (tâches multi-fichiers avec exécution)</li>
 <li>Contexte : <code>#file:chemin</code>, <code>#codebase</code>, <code>#selection</code></li>
@@ -196,6 +212,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
 
 <footer>Formation IA pour les devs · Human Coders · Version participants</footer>
 </main>
+</div>
 <script>
 (function(){
   var KEY = document.body.getAttribute('data-key');
@@ -220,6 +237,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
     Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); if (c && c.checked) done++; });
     var pct = tickets.length ? Math.round(100 * done / tickets.length) : 0;
     var bar = document.getElementById('bar'); if (bar) bar.style.width = pct + '%';
+    Array.prototype.forEach.call(tickets, function(t){ var c = t.querySelector('input.done-box'); var a = document.querySelector('nav.side a[href="#' + t.id + '"]'); if (a) a.classList.toggle('is-done', !!(c && c.checked)); });
     var lab = document.getElementById('plabel'); if (lab) lab.textContent = done + ' / ' + tickets.length + ' tickets terminés';
   }
   function copy(text, btn){
@@ -249,6 +267,19 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:3rem}
   });
   var rs = document.getElementById('reset');
   if (rs) rs.addEventListener('click', function(){ if (confirm('Effacer toutes vos saisies de ce TP ?')) { try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } });
+  var topbar = document.querySelector('.top');
+  function setTop(){ if (topbar) document.documentElement.style.setProperty('--top-h', (topbar.offsetHeight + 8) + 'px'); }
+  setTop(); window.addEventListener('resize', setTop);
+  var links = document.querySelectorAll('nav.side a'), map = {};
+  Array.prototype.forEach.call(links, function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var targets = Object.keys(map).map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  function spy(){
+    var y = (topbar ? topbar.offsetHeight : 0) + 40, cur = targets[0];
+    targets.forEach(function(t){ if (t.getBoundingClientRect().top <= y) cur = t; });
+    Array.prototype.forEach.call(links, function(a){ a.classList.remove('active'); });
+    if (cur && map[cur.id]) { map[cur.id].classList.add('active'); }
+  }
+  window.addEventListener('scroll', spy, { passive: true }); spy();
   update();
   window.addEventListener('load', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
   window.addEventListener('resize', function(){ Array.prototype.forEach.call(document.querySelectorAll('textarea'), grow); });
